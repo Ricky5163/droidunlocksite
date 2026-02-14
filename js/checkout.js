@@ -41,8 +41,11 @@ async function startPayPal(){
 });
 
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) return setStatus("❌ " + (data.error || "Erro"));
-  window.location.href = data.approval_url;
+  if (!res.ok) return setStatus("❌ " + (data.error || "Erro PayPal"));
+
+  const url = data.approval_url || data.approvalUrl;
+if (!url) return setStatus("❌ Link de aprovação PayPal não encontrado.");
+window.location.href = url;
 }
 
 document.getElementById("payStripe").addEventListener("click", startStripe);
