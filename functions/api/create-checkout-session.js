@@ -1,5 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 
+    const cors = {
+  "Access-Control-Allow-Origin": "https://droidunclock.site",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+
 /**
  * Route:
  *   /api/create-checkout-session
@@ -13,6 +20,9 @@ import { createClient } from "@supabase/supabase-js";
 export async function onRequest(context) {
   try {
     const { request, env } = context;
+if (request.method === "OPTIONS") {
+  return new Response(null, { status: 204, headers: cors });
+}
 
     if (request.method !== "POST") {
       return json(405, { error: "Method not allowed" });
@@ -132,6 +142,9 @@ export async function onRequest(context) {
 function json(status, obj) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { "content-type": "application/json; charset=utf-8" },
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      ...cors,
+    },
   });
 }
